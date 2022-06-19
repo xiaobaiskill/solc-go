@@ -8,8 +8,8 @@ type Input struct {
 
 type SourceIn struct {
 	Content   string   `json:"content,omitempty"`
-	Keccak256 string   `json:"keccak256,omitempty`
-	Urls      []string `json:"urls,omitempty`
+	Keccak256 string   `json:"keccak256,omitempty"`
+	Urls      []string `json:"urls,omitempty"`
 }
 
 type Settings struct {

@@ -37,6 +37,10 @@ func (s *solcImp) Compile(in *Input) (*Output, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed outPut: %v", err)
 	}
-	fmt.Println(string(output))
-	return nil, nil
+	out := Output{}
+	err = json.Unmarshal(output, &out)
+	if err != nil {
+		return nil, fmt.Errorf("failed unmarshal output: %v", err)
+	}
+	return &out, nil
 }
