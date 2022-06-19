@@ -1,13 +1,11 @@
 package solc
 
 import (
+	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os/exec"
 )
-
-var ErrMarshalWithInput = errors.New("failed marshal input")
 
 type Solc interface {
 	Compile(Input) (*Output, error)
@@ -23,18 +21,21 @@ func NewSolc(bin string) *solcImp {
 	}
 }
 
-func (s *solcImp) Compile(in Input) (*Output, error) {
-	bytes, err := json.Marshal(in)
+func (s *solcImp) Compile(in *Input) (*Output, error) {
+	b, err := json.Marshal(in)
 	if err != nil {
-		return nil, ErrMarshalWithInput
+		return nil, fmt.Errorf("failed marshal input: %v", err)
 	}
-	cmd := fmt.Sprintf("%s --combined-json", s.bin)
+	cmd := fmt.Sprintf("%s --standard-json", s.bin)
 
 	command := exec.Command("bash", "-c", cmd)
-	command.Stdin.Read(bytes)
+	command.Stdin = bytes.NewReader(b)
+	if err != nil {
+		return nil, fmt.Errorf("failed stdin: %v", err)
+	}
 	output, err := command.Output()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed outPut: %v", err)
 	}
 	fmt.Println(string(output))
 	return nil, nil

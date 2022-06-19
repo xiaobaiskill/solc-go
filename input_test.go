@@ -7,12 +7,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var testStandJson = `
+var testStandJsonSample = `
 {
     "language": "Solidity",
     "sources": {
       "contracts/BlindBox.sol": {
-        "content": ""
+        "content": "",
+        "keccak256":"0xaaa",
+        "urls":["ipfs://"]
       },
       "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": {
         "content": ""
@@ -41,7 +43,7 @@ var testStandJson = `
 
 func TestInput(t *testing.T) {
 	var in = Input{}
-	err := json.Unmarshal([]byte(testStandJson), &in)
+	err := json.Unmarshal([]byte(testStandJsonSample), &in)
 	assert.NoError(t, err)
 	t.Log(in)
 }
