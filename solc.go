@@ -27,7 +27,7 @@ func (s *solcImp) Compile(in *Input) (*Output, error) {
 		return nil, fmt.Errorf("failed marshal input: %v", err)
 	}
 
-	cmd := fmt.Sprintf("%s --asm --standard-json", s.bin)
+	cmd := fmt.Sprintf("%s --standard-json", s.bin)
 
 	command := exec.Command("bash", "-c", cmd)
 	command.Stdin = bytes.NewReader(b)
