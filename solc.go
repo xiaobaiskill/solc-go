@@ -21,16 +21,13 @@ func NewSolc(bin string) *solcImp {
 	}
 }
 
-func (s *solcImp) Compile(in *Input, evmVersion string) (*Output, error) {
+func (s *solcImp) Compile(in *Input) (*Output, error) {
 	b, err := json.Marshal(in)
 	if err != nil {
 		return nil, fmt.Errorf("failed marshal input: %v", err)
 	}
-	var cmd string = s.bin
-	if evmVersion != "" {
-		cmd = fmt.Sprintf("%s --evm-version %s", cmd, evmVersion)
-	}
-	cmd = fmt.Sprintf("%s --asm --standard-json", cmd)
+
+	cmd := fmt.Sprintf("%s --asm --standard-json", s.bin)
 
 	command := exec.Command("bash", "-c", cmd)
 	command.Stdin = bytes.NewReader(b)

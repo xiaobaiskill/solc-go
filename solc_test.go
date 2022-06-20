@@ -18,7 +18,7 @@ func TestSolcStandJson(t *testing.T) {
 	err = json.Unmarshal(bytes, &in)
 	assert.NoError(t, err)
 	solc := NewSolc("/Users/jinmingzhi/Downloads/solc-0.8.4")
-	out, err := solc.Compile(&in, "")
+	out, err := solc.Compile(&in)
 	assert.NoError(t, err)
 	assert.Equal(t, len(out.Errors), 0)
 	t.Log(out.Errors)
@@ -66,7 +66,7 @@ func TestSolcFile(t *testing.T) {
 	}
 
 	solc := NewSolc("/Users/jinmingzhi/Downloads/solc-0.8.4")
-	out, err := solc.Compile(&in, "")
+	out, err := solc.Compile(&in)
 	assert.NoError(t, err)
 	// assert.Equal(t, len(out.Errors), 0)
 	// t.Log(out.Errors)

@@ -14,6 +14,7 @@ type SourceIn struct {
 
 type Settings struct {
 	Optimizer       Optimizer                      `json:"optimizer,omitempty"`
+	EVMVersion      string                         `json:"evmVersion,omitempty"`
 	OutputSelection map[string]map[string][]string `json:"outputSelection,omitempty"`
 }
 
