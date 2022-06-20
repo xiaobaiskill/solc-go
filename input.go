@@ -18,6 +18,6 @@ type Settings struct {
 }
 
 type Optimizer struct {
-	Enabled bool `json:"enabled,omitempty"`
-	Runs    int  `json:"runs,omitempty"`
+	Enabled bool `json:"enabled"`
+	Runs    int  `json:"runs"`
 }

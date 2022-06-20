@@ -26,10 +26,11 @@ func (s *solcImp) Compile(in *Input, evmVersion string) (*Output, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed marshal input: %v", err)
 	}
-	cmd := fmt.Sprintf("%s --standard-json", s.bin)
+	var cmd string = s.bin
 	if evmVersion != "" {
 		cmd = fmt.Sprintf("%s --evm-version %s", cmd, evmVersion)
 	}
+	cmd = fmt.Sprintf("%s --asm --standard-json", cmd)
 
 	command := exec.Command("bash", "-c", cmd)
 	command.Stdin = bytes.NewReader(b)

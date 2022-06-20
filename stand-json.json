@@ -95,14 +95,9 @@
       "*": {
         "*": [
           "abi",
-          "evm.bytecode",
           "evm.deployedBytecode",
           "evm.methodIdentifiers",
-          "metadata",
-          "storageLayout"
-        ],
-        "": [
-          "ast"
+          "metadata"
         ]
       }
     }

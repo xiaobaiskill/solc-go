@@ -1,4 +1,3 @@
-
 // File: @openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol
 
 
@@ -1333,9 +1332,9 @@ contract Erc20FT is ERC20Upgradeable, OwnableUpgradeable, Verify {
         super._transfer(sender, recipient, amount);
     }
 
-    // function mint(address account, uint256 amount) external onlyAdmin {
-    //     return super._mint(account, amount);
-    // }
+    function mint(address account, uint256 amount) external onlyOwner {
+        return super._mint(account, amount);
+    }
 
     function adminMint(address account, uint256 amount) external onlyAdmin {
         return super._mint(account, amount);
@@ -1383,26 +1382,17 @@ contract Erc20FT is ERC20Upgradeable, OwnableUpgradeable, Verify {
         uint256 timestamp,
         bytes memory data
     ) external {
+        address signer = msg.sender;
         uint256 amount = _amount.mul(1e16);
-        uint256 date = block.timestamp.div(86400); // 24 * 60 * 60
-        require(dateAmount[date].add(amount) <= withdrawLimit, "Withdraw: exceed daily limit");
-
-        uint256 second = timestamp.div(1e9);
-        require(second > block.timestamp || block.timestamp.sub(second) <= 300, "Withdraw: timeout");
-
-        bytes32 _hash = keccak256(abi.encodePacked(msg.sender, _amount, timestamp));
+        bytes32 _hash;
+        _hash = keccak256(abi.encodePacked(signer, _amount, timestamp));
         require(verify(_hash, data), "Withdraw: Authentication failed");
-
         require(
-            records[msg.sender][_hash] == 0,
+            records[signer][_hash] == 0,
             "Withdraw: signature has been used"
         );
-        super._mint(msg.sender, amount);
-        records[msg.sender][_hash] = timestamp;
-        dateAmount[date] = dateAmount[date].add(amount);
-        if(dateAmount[date.sub(1)] > 0){
-            delete dateAmount[date.sub(1)];
-        }
+        super._mint(signer, amount);
+        records[signer][_hash] = timestamp;
     }
 
     function setAdmin(address user, bool _auth) external onlyOwner {
@@ -1415,45 +1405,5 @@ contract Erc20FT is ERC20Upgradeable, OwnableUpgradeable, Verify {
             "Admin: caller is not the admin"
         );
         _;
-    }
-
-    struct Supply {
-        uint256 cap;
-        uint256 total;
-    }
-    mapping(address => Supply) public bridges;
-    event BridgeSupplyCapUpdated(address bridge, uint256 supplyCap);
-    /**
-     * @notice Updates the supply cap for a bridge.
-     * @param _bridge The bridge address.
-     * @param _cap The new supply cap.
-     */
-    function updateBridgeSupplyCap(address _bridge, uint256 _cap) external onlyOwner {
-        // cap == 0 means revoking bridge role
-        bridges[_bridge].cap = _cap;
-        emit BridgeSupplyCapUpdated(_bridge, _cap);
-    }
-
-    function mint(address _to, uint256 _amount) external {
-        Supply storage b = bridges[msg.sender];
-        require(b.cap > 0, "invalid caller");
-        require(b.total.add(_amount) <= b.cap, "exceeds bridge supply cap");
-        b.total = b.total.add(_amount);
-        _mint(_to, _amount);
-    }
-
-    function burn(address _from, uint256 _amount) external  {
-        Supply storage b = bridges[msg.sender];
-        require(b.cap > 0, "invalid caller");
-        require(b.total >= _amount, "exceeds bridge minted amount");
-        _spendAllowance(_from, _msgSender(), _amount);
-        _burn(_from, _amount);
-        b.total = b.total.sub(_amount);
-    }
-
-    mapping(uint256=>uint256) public dateAmount;
-    uint256 public withdrawLimit;
-    function setWithdrawLimit(uint256 amount_) public onlyAdmin {
-        withdrawLimit = amount_;
     }
 }
