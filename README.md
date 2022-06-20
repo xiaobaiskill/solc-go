@@ -21,7 +21,7 @@ func main() {
 	input := &solc.Input{
 		Language: "Solidity",
 		Sources: map[string]solc.SourceIn{
-			"One.sol": solc.SourceIn{Content: "pragma solidity ^0.6.2; contract One { function one() public pure returns (uint) { return 1; } }"},
+			"One.sol": solc.SourceIn{Content: "pragma solidity ^0.8.0; contract One { function one() public pure returns (uint) { return 1; } }"},
 		},
 		Settings: solc.Settings{
 			Optimizer: solc.Optimizer{
