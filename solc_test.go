@@ -74,6 +74,8 @@ func TestSolcFile(t *testing.T) {
 	assert.True(t, ok)
 	blindbox, ok := contract["Erc20FT"]
 	assert.True(t, ok)
-	t.Log(blindbox.EVM.DeployedBytecode.Object)
 
+	t.Log(blindbox.EVM.ABI) // abi
+	t.Log(blindbox.EVM.DeployedBytecode.Object)
+	t.Log(blindbox.Metadata) // metadata (simple file)/ (blindbox.Metadata)
 }
