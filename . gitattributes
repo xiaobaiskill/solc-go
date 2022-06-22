@@ -1,2 +1,2 @@
-*.sol linguist-language=go;
-*.json linguist-language=go;
+*.sol linguist-language=golang;
+*.json linguist-language=golang;
