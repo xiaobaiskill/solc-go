@@ -27,14 +27,10 @@ func (s *solcImp) Compile(in *Input) (*Output, error) {
 		return nil, fmt.Errorf("failed marshal input: %v", err)
 	}
 
-	args := make([]string, 1)
-	args = append(args, "--standard-json")
-
-	command := exec.Command(s.bin, args...)
+	cmd := fmt.Sprintf("%s --standard-json", s.bin)
+	command := exec.Command("bash", "-c", cmd)
 	command.Stdin = bytes.NewReader(b)
-	if err != nil {
-		return nil, fmt.Errorf("failed stdin: %v", err)
-	}
+
 	output, err := command.Output()
 	if err != nil {
 		return nil, fmt.Errorf("failed outPut: %v", err)
